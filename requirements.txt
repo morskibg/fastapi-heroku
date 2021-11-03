@@ -1,0 +1,12 @@
+fastapi
+sqlalchemy 
+alembic
+gunicorn
+uvicorn
+psycopg2-binary 
+python-jose
+passlib
+pydantic[email]
+emails
+python-multipart
+celery
