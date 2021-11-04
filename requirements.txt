@@ -4,9 +4,10 @@ alembic
 gunicorn
 uvicorn
 psycopg2-binary 
-python-jose==3.1.0
+# python-jose==3.1.0
 passlib
 pydantic[email]
 emails
 python-multipart
 celery
+pyjwt
