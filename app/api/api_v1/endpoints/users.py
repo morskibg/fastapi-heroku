@@ -23,22 +23,10 @@ def read_users(
     """
     Retrieve users.
     """
+    print('in geeet user !!!!!!!!!!!!!!!!1')
     users = crud.user.get_multi(db, skip=skip, limit=limit)
     return users
 
-@router.get("/test", response_model=List[schemas.User])
-def test(
-    db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    """
-    Retrieve users.
-    """
-    print('AAAAAAAAAAAAA')
-    users = crud.user.get_multi(db, skip=skip, limit=limit)
-    return {'message':'maliii'}
 
 @router.post("/", response_model=schemas.User)
 def create_user(
@@ -121,7 +109,8 @@ def create_user_open(
             status_code=400,
             detail="The user with this username already exists in the system",
         )
-    user_in = schemas.UserCreate(password=password, email=email, full_name=full_name)
+    user_in = schemas.UserCreate(
+        password=password, email=email, full_name=full_name)
     user = crud.user.create(db, obj_in=user_in)
     return user
 
