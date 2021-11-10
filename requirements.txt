@@ -1,11 +1,11 @@
-fastapi
+fastapi[all]
 sqlalchemy 
 alembic
 gunicorn
 uvicorn
 psycopg2-binary 
 # python-jose==3.1.0
-passlib
+passlib[bcrypt]
 pydantic[email]
 emails
 python-multipart
