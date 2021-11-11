@@ -35,7 +35,7 @@ def get_current_user(
         print('payloooooad', payload)
         token_data = schemas.TokenPayload(**payload)
     except jwt.exceptions.InvalidTokenError as e:
-
+        print('Exception from jwt decode')
         print(e)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
