@@ -83,6 +83,7 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: EmailStr = "dimityrp@yahoo.com"
     FIRST_SUPERUSER_PASSWORD: str = '12345'
     USERS_OPEN_REGISTRATION: bool = True
+    EMAIL_GUEST_USER: EmailStr = "guestUser@demo.com"
 
     class Config:
         case_sensitive = True

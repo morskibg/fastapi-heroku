@@ -38,7 +38,7 @@ def login_access_token(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(
-            user.id, user.is_superuser, expires_delta=access_token_expires
+            user.id, user.is_superuser, user.email == settings.EMAIL_GUEST_USER, expires_delta=access_token_expires
         ),
         "token_type": "bearer",
         # "access_token": security.create_access_token(
