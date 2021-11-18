@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, Column, Integer, String, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, aliased
 from datetime import datetime
 
 from app.db.base_class import Base
@@ -17,5 +17,6 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
+    creator_email = Column(String, index=True)
     last_seen = Column(DateTime(timezone=True))
     last_updated = Column(DateTime(timezone=True), default=datetime.utcnow)
