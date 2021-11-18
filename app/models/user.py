@@ -17,4 +17,5 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
+    last_seen = Column(DateTime(timezone=True))
     last_updated = Column(DateTime(timezone=True), default=datetime.utcnow)
