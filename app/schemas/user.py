@@ -10,14 +10,14 @@ class UserBase(BaseModel):
     is_active: Optional[bool] = True
     is_superuser: bool = False
     full_name: Optional[str] = None
-    creator_email: Optional[str] = None
+    creator_email: Optional[EmailStr] = None
     last_seen: Optional[datetime] = None
     last_updated: Optional[datetime] = None
 
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    email: EmailStr
+    # email: EmailStr
     password: str
 
 
