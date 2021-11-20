@@ -37,7 +37,7 @@ def delete_user(
     """
     Delete user.
     """
-    result = crud.user.delete(db, email)
+    result = crud.user.remove_by_email(db, email)
     if not result:
         raise HTTPException(
             status_code=404,
