@@ -8,7 +8,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate, UserDelete
 
 
-class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+class CRUDUser(CRUDBase[User, UserCreate, UserUpdate, UserDelete]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
 
@@ -25,13 +25,10 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.refresh(db_obj)
         return db_obj
 
-    def delete(self, db: Session, *, email: str):
-        user = self.get_by_email(db, email=email).delete()
-        if user:
-            db.commit()
-            return True
-        else:
-            return False
+    def delete(self, db: Session, *, obj_in: UserDelete):
+        self.get_by_email(db, email=obj_in.email).delete()
+        db.commit()
+        return True
 
     def update(
         self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
