@@ -33,16 +33,19 @@ def delete_user(
     *,
     db: Session = Depends(deps.get_db),
     email: EmailStr,
+    current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
     Delete user.
     """
-    result = crud.user.remove_by_email(db, email=email)
-    if not result:
+    deleted_user = crud.user.remove_by_email(db, email=email)
+    if not deleted_user:
         raise HTTPException(
             status_code=404,
             detail="Delete failed fot user with this email",
         )
+    else:
+        return deleted_user
 
 
 @router.post("/", response_model=schemas.User)
