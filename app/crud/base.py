@@ -9,6 +9,7 @@ from app.db.base_class import Base
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+# DeleteSchemaType = TypeVar("DeleteSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
@@ -61,6 +62,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def remove(self, db: Session, *, id: int) -> ModelType:
         obj = db.query(self.model).get(id)
+        db.delete(obj)
+        db.commit()
+        return obj
+
+    def remove_by_email(self, db: Session, *, email: str) -> Optional[ModelType]:
+        obj = db.query(self.model).filter(self.model.email == email).first()
         db.delete(obj)
         db.commit()
         return obj
