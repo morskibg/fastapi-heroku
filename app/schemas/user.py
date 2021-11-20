@@ -41,3 +41,7 @@ class User(UserInDBBase):
 # Additional properties stored in DB
 class UserInDB(UserInDBBase):
     hashed_password: str
+
+
+class UserDelete(BaseModel):
+    email: EmailStr

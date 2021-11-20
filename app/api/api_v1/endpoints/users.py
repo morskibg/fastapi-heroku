@@ -28,6 +28,23 @@ def read_users(
     return users
 
 
+@router.delete("/{email}", response_model=schemas.User)
+def delete_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    email: EmailStr,
+) -> Any:
+    """
+    Delete user.
+    """
+    result = crud.user.delete(db, email)
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail="Delete failed fot user with this email",
+        )
+
+
 @router.post("/", response_model=schemas.User)
 def create_user(
     *,
