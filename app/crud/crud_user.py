@@ -39,10 +39,13 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         else:
             update_data = obj_in.dict(exclude_unset=True)
             print(f'Update data ---> {update_data}')
-        if update_data["password"]:
-            hashed_password = get_password_hash(update_data["password"])
-            del update_data["password"]
-            update_data["hashed_password"] = hashed_password
+        try:
+            if update_data["password"]:
+                hashed_password = get_password_hash(update_data["password"])
+                del update_data["password"]
+                update_data["hashed_password"] = hashed_password
+        except:
+            pass
         return super().update(db, db_obj=db_obj, obj_in=update_data)
 
     def remove_by_email(self, db: Session, *, email: str) -> Optional[User]:
