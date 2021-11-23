@@ -33,6 +33,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def update(
         self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
     ) -> User:
+        print(f'aaaaaaaaaaaaaa--->{obj_in}')
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
