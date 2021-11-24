@@ -23,6 +23,7 @@ class ContractorUpdate(ContractorBase):
 # Properties shared by models stored in DB
 class ContractorInDBBase(ContractorBase):
     id: int
+    address_id: int
 
     class Config:
         orm_mode = True
