@@ -12,6 +12,10 @@ class ContractorBase(BaseModel):
     address: Optional[Address] = None
     eik: str
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
 
 # Properties to receive on Contractor creation
 class ContractorCreate(ContractorBase):
@@ -29,7 +33,6 @@ class ContractorInDBBase(ContractorBase):
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
 
 
 # Properties to return to client
