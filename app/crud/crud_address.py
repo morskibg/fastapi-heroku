@@ -9,6 +9,7 @@ from app.schemas.address import AddressCreate, AddressUpdate
 
 
 class CRUDAddress(CRUDBase[Address, AddressCreate, AddressUpdate]):
+
     def create(
         self, db: Session, *, obj_in: AddressCreate
     ) -> Address:
@@ -18,8 +19,6 @@ class CRUDAddress(CRUDBase[Address, AddressCreate, AddressUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
-
-    
 
 
 address = CRUDAddress(Address)
