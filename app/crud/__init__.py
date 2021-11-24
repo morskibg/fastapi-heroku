@@ -1,6 +1,7 @@
 # from .crud_item import item
 from .crud_user import user
 from .crud_address import address
+from .crud_contractor import contractor
 
 # For a new basic set of CRUD operations you could just do
 
