@@ -7,7 +7,6 @@ from ..models import Address
 # Shared properties
 class ContractorBase(BaseModel):
     name: str
-    address_id: int
     eik: str
 
 
@@ -24,18 +23,17 @@ class ContractorUpdate(ContractorBase):
 # Properties shared by models stored in DB
 class ContractorInDBBase(ContractorBase):
     id: int
-
-    class Config:
-        orm_mode = True
-
-
-# Properties to return to client
-class Contractor(ContractorInDBBase):
     address: Address
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+# Properties to return to client
+class Contractor(ContractorInDBBase):
+
+    pass
 
 
 # Properties properties stored in DB
