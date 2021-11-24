@@ -35,6 +35,7 @@ class Contractor(ContractorInDBBase):
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True
 
 
 # Properties properties stored in DB
