@@ -24,19 +24,19 @@ def read_addresses(
     return addresses
 
 
-# @router.post("/", response_model=schemas.Item)
-# def create_item(
-#     *,
-#     db: Session = Depends(deps.get_db),
-#     item_in: schemas.ItemCreate,
-#     current_user: models.User = Depends(deps.get_current_active_user),
-# ) -> Any:
-#     """
-#     Create new item.
-#     """
-#     item = crud.item.create_with_owner(
-#         db=db, obj_in=item_in, owner_id=current_user.id)
-#     return item
+@router.post("/", response_model=schemas.Address)
+def create_address(
+    *,
+    db: Session = Depends(deps.get_db),
+    address_in: schemas.AddressCreate,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Create new address.
+    """
+    address = crud.address.create(
+        db=db, obj_in=address_in)
+    return address
 
 
 # @router.put("/{id}", response_model=schemas.Item)
