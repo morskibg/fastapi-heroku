@@ -8,6 +8,7 @@ from app.db.base_class import Base
 if TYPE_CHECKING:
 
     from .itn_meta import ItnMeta  # noqa: F401
+    from .contractor import Contractor  # noqa: F401
 
 
 class Address(Base):
@@ -17,3 +18,4 @@ class Address(Base):
     address_line = Column(String, index=True)
 
     itns = relationship("ItnMeta", back_populates="address")
+    contractors = relationship("Contractor", back_populates="address")
