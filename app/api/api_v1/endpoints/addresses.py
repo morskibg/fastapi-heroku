@@ -58,58 +58,38 @@ def create_address(
     return address
 
 
-# @router.put("/{id}", response_model=schemas.Item)
-# def update_item(
-#     *,
-#     db: Session = Depends(deps.get_db),
-#     id: int,
-#     item_in: schemas.ItemUpdate,
-#     current_user: models.User = Depends(deps.get_current_active_user),
-# ) -> Any:
-#     """
-#     Update an item.
-#     """
-#     item = crud.item.get(db=db, id=id)
-#     if not item:
-#         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
-#         raise HTTPException(status_code=400, detail="Not enough permissions")
-#     item = crud.item.update(db=db, db_obj=item, obj_in=item_in)
-#     return item
+@router.put("/{address_id}", response_model=schemas.Address)
+def update_address(
+    *,
+    db: Session = Depends(deps.get_db),
+    address_id: int,
+    address_in: schemas.AddressUpdate,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Update an address.
+    """
+    address = crud.address.get(db=db, id=address_id)
+    if not address:
+        raise HTTPException(status_code=404, detail="Address not found")
+
+    address = crud.address.update(db=db, db_obj=address, obj_in=address_in)
+    return address
 
 
-# @router.get("/{id}", response_model=schemas.Item)
-# def read_item(
-#     *,
-#     db: Session = Depends(deps.get_db),
-#     id: int,
-#     current_user: models.User = Depends(deps.get_current_active_user),
-# ) -> Any:
-#     """
-#     Get item by ID.
-#     """
-#     item = crud.item.get(db=db, id=id)
-#     if not item:
-#         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
-#         raise HTTPException(status_code=400, detail="Not enough permissions")
-#     return item
+@router.delete("/{address_id}", response_model=schemas.Address)
+def delete_address(
+    *,
+    db: Session = Depends(deps.get_db),
+    address_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Delete an address.
+    """
+    address = crud.address.get(db=db, id=address_id)
+    if not address:
+        raise HTTPException(status_code=404, detail="Address not found")
 
-
-# @router.delete("/{id}", response_model=schemas.Item)
-# def delete_item(
-#     *,
-#     db: Session = Depends(deps.get_db),
-#     id: int,
-#     current_user: models.User = Depends(deps.get_current_active_user),
-# ) -> Any:
-#     """
-#     Delete an item.
-#     """
-#     item = crud.item.get(db=db, id=id)
-#     if not item:
-#         raise HTTPException(status_code=404, detail="Item not found")
-#     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
-#         raise HTTPException(status_code=400, detail="Not enough permissions")
-#     item = crud.item.remove(db=db, id=id)
-#     return item
+    address = crud.address.remove(db=db, id=address_id)
+    return address
