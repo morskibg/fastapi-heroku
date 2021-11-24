@@ -18,4 +18,5 @@ class Contractor(Base):
     eik = Column(String, index=True)
 
     contracts = relationship("Contract", back_populates="contractor")
-    address = relationship("Address", back_populates="contractors")
+    address = relationship("Address", uselist=False,
+                           back_populates="contractors")
