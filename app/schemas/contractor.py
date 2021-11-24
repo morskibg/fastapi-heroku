@@ -6,7 +6,7 @@ from pydantic import BaseModel
 # Shared properties
 class ContractorBase(BaseModel):
     name: str
-    address: Optional[str] = None
+    address_id: int
     eik: str
 
 
@@ -23,7 +23,6 @@ class ContractorUpdate(ContractorBase):
 # Properties shared by models stored in DB
 class ContractorInDBBase(ContractorBase):
     id: int
-    address_id: int
 
     class Config:
         orm_mode = True
