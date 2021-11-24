@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
+from models import Address
 
 
 # Shared properties
@@ -30,7 +31,7 @@ class ContractorInDBBase(ContractorBase):
 
 # Properties to return to client
 class Contractor(ContractorInDBBase):
-    pass
+    address: Address
 
 
 # Properties properties stored in DB
