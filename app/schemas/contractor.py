@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
-from models import Address
+from ..models import Address
 
 
 # Shared properties
