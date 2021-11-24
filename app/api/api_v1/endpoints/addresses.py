@@ -24,6 +24,25 @@ def read_addresses(
     return addresses
 
 
+@router.get("/{address_id}", response_model=schemas.Address)
+def read_address_by_id(
+    address_id: int,
+    current_user: models.User = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Retrieve address by id.
+    """
+    address = crud.address.get(db, id=address_id)
+    if not address:
+        raise HTTPException(
+            status_code=404,
+            detail="The address with this id does not exist in the system",
+        )
+
+    return address
+
+
 @router.post("/", response_model=schemas.Address)
 def create_address(
     *,
