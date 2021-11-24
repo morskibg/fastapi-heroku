@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional, Union
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -38,6 +39,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             update_data = obj_in
         else:
             update_data = obj_in.dict(exclude_unset=True)
+            update_data['last_updated'] = datetime.utcnow()
             print(f'Update data ---> {update_data}')
         try:
             if update_data["password"]:
