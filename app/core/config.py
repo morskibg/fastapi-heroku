@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     SERVER_NAME: str = 'https://softuni-react-backend.herokuapp.com/'
+    # https://backend-react-powerapp.herokuapp.com/
     SERVER_HOST: AnyHttpUrl = 'http://localhost:8080'
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \

@@ -33,6 +33,9 @@ class ContractorInDBBase(ContractorBase):
 class Contractor(ContractorInDBBase):
     address: Address
 
+    class Config:
+        orm_mode = True
+
 
 # Properties properties stored in DB
 class ContractorInDB(ContractorInDBBase):
