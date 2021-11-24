@@ -1,12 +1,15 @@
 from typing import Optional
 
 from pydantic import BaseModel
+
+from app.models import address
 from ..models import Address
 
 
 # Shared properties
 class ContractorBase(BaseModel):
     name: str
+    address: Optional[Address] = None
     eik: str
 
 
@@ -23,7 +26,6 @@ class ContractorUpdate(ContractorBase):
 # Properties shared by models stored in DB
 class ContractorInDBBase(ContractorBase):
     id: int
-    address: Address
 
     class Config:
         orm_mode = True
