@@ -30,7 +30,8 @@ class AddressInDBBase(AddressBase):
 
 # Properties to return to client
 class Address(AddressInDBBase):
-    pass
+    class Config:
+        orm_mode = True
 
 
 # Properties properties stored in DB

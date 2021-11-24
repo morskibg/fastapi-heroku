@@ -33,6 +33,7 @@ class ContractorInDBBase(ContractorBase):
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True
 
 
 # Properties to return to client
