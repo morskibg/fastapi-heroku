@@ -1,4 +1,6 @@
 from typing import Any
+import pandas as pd
+import os
 
 from fastapi import APIRouter, Depends
 from pydantic.networks import EmailStr
@@ -33,3 +35,14 @@ def test_email(
     """
     send_test_email(email_to=email_to)
     return {"msg": "Test email sent"}
+
+
+@router.get('/excel')
+def excel():
+    # path = os.path.join(os.path.join(
+    #                 app.root_path, app.config[curr_path]), file.filename)
+    df = pd.read_excel(
+        os.path.join(os.getcwd(), 'stp10.xlsx'))
+    return {"msg": df.to_json(orient="split")}
+
+    # return {"msg": df.to_json(orient="split")}
