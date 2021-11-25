@@ -25,3 +25,4 @@ class ItnMeta(Base):
 
 
 event.listen(ItnMeta, 'after_insert', ItnSchedule.autoinsert_new)
+# a = 99
