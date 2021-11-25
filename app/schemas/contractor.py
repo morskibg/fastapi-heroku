@@ -3,27 +3,22 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.models import address
-from ..models import Address
+from .address import Address
 
 
 # Shared properties
 class ContractorBase(BaseModel):
     name: str
-    address: Optional[Address] = None
     eik: str
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
 
 
 # Properties to receive on Contractor creation
 class ContractorCreate(ContractorBase):
-    pass
+    address_id: int
 
 
 # Properties to receive on Contractor update
-class ContractorUpdate(ContractorBase):
+class ContractorUpdate(ContractorCreate):
     pass
 
 
@@ -33,13 +28,12 @@ class ContractorInDBBase(ContractorBase):
 
     class Config:
         orm_mode = True
-        arbitrary_types_allowed = True
+        # arbitrary_types_allowed = True
 
 
 # Properties to return to client
 class Contractor(ContractorInDBBase):
-
-    pass
+    address:  Optional[Address] = None
 
 
 # Properties properties stored in DB

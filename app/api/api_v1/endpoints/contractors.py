@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[schemas.Contractor])
-def read_addresses(
+def read_contractors(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
@@ -25,7 +25,7 @@ def read_addresses(
 
 
 @router.get("/{contractor_id}", response_model=schemas.Contractor)
-def read_address_by_id(
+def read_contractor_by_id(
     contractor_id: int,
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
@@ -44,26 +44,26 @@ def read_address_by_id(
 
 
 @router.post("/", response_model=schemas.Contractor)
-def create_address(
+def create_contractor(
     *,
     db: Session = Depends(deps.get_db),
-    address_in: schemas.ContractorCreate,
+    contractor_in: schemas.ContractorCreate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Create new contractor.
     """
     contractor = crud.contractor.create(
-        db=db, obj_in=address_in)
+        db=db, obj_in=contractor_in)
     return contractor
 
 
 @router.put("/{contractor_id}", response_model=schemas.Contractor)
-def update_address(
+def update_contractor(
     *,
     db: Session = Depends(deps.get_db),
     contractor_id: int,
-    address_in: schemas.ContractorUpdate,
+    contractor_in: schemas.ContractorUpdate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
@@ -74,12 +74,12 @@ def update_address(
         raise HTTPException(status_code=404, detail="Contractor not found")
 
     contractor = crud.contractor.update(
-        db=db, db_obj=contractor, obj_in=address_in)
+        db=db, db_obj=contractor, obj_in=contractor_in)
     return contractor
 
 
 @router.delete("/{contractor_id}", response_model=schemas.Contractor)
-def delete_address(
+def delete_contractor(
     *,
     db: Session = Depends(deps.get_db),
     contractor_id: int,

@@ -18,4 +18,5 @@ class Address(Base):
     address_line = Column(String, index=True)
 
     itns = relationship("ItnMeta", back_populates="address")
-    contractors = relationship("Contractor", back_populates="address")
+    contractors = relationship(
+        "Contractor", back_populates="address")

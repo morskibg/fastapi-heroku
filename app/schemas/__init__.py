@@ -4,3 +4,6 @@ from .token import Token, TokenPayload
 from .user import User, UserCreate, UserInDB, UserUpdate
 from .address import Address, AddressCreate, AddressInDB, AddressUpdate
 from .contractor import Contractor, ContractorCreate, ContractorInDB, ContractorUpdate
+from .contract import Contract, ContractCreate, ContractInDB, ContractUpdate
+from .itn_meta import ItnMeta, ItnMetaCreate, ItnMetaInDB, ItnMetaUpdate
+from .itn_schedule import ItnSchedule, ItnScheduleCreate, ItnScheduleInDB, ItnScheduleUpdate

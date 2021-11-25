@@ -2,6 +2,9 @@
 from .crud_user import user
 from .crud_address import address
 from .crud_contractor import contractor
+from .crud_contract import contract
+from .crud_itn_meta import itn_meta
+from .crud_itn_schedule import itn_schedule
 
 # For a new basic set of CRUD operations you could just do
 

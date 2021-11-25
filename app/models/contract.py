@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Column, ForeignKey, Integer, String, Numeric, DateTime
 from sqlalchemy.orm import relationship
 
+
 from app.db.base_class import Base
 
 if TYPE_CHECKING:
@@ -18,5 +19,6 @@ class Contract(Base):
     contractor_id = Column(Integer, ForeignKey("contractor.id",
                                                ondelete='CASCADE', onupdate='CASCADE'))
 
-    contractor = relationship("Contractor", back_populates="contracts")
+    contractor = relationship(
+        "Contractor", back_populates="contracts", lazy='subquery')
     itns = relationship("ItnMeta", back_populates="contract")

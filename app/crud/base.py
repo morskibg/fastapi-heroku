@@ -64,6 +64,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj = db.query(self.model).get(id)
         db.delete(obj)
         db.commit()
+
         return obj
 
     def remove_by_email(self, db: Session, *, email: str) -> Optional[ModelType]:

@@ -17,5 +17,7 @@ class Contractor(Base):
                                             ondelete='CASCADE', onupdate='CASCADE'))
     eik = Column(String, index=True)
 
-    contracts = relationship("Contract", back_populates="contractor")
-    address = relationship("Address", back_populates="contractors")
+    contracts = relationship(
+        "Contract", back_populates="contractor", lazy="subquery")
+    address = relationship(
+        "Address", back_populates="contractors", lazy='subquery')
