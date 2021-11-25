@@ -11,3 +11,4 @@ emails
 python-multipart
 celery
 pyjwt
+pandas

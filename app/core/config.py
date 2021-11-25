@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:4200", "http://localhost:3000",
-                                              "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com", "http://10.10.10.71:3000", "https://softuni-react-power-app.herokuapp.com"]
+                                              "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com", "http://10.10.10.71:3000", "https://softuni-react-power-app.herokuapp.com", "https://softuni-react-backend.herokuapp.com"]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
