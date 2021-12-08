@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 
 from fastapi.encoders import jsonable_encoder
 from fastapi.openapi.models import Contact
@@ -42,7 +42,7 @@ class CRUDItnMeta(CRUDBase[ItnMeta, ItnMetaCreate, ItnMetaUpdate]):
 
     def get_all_availabe_for_period(
         self, db: Session, *, start_date: date, end_date: date
-    ) -> list[ItnMeta]:
+    ) -> Any:
         db_obj = (db.query(ItnMeta)
                   .join(Contract, Contract.id == ItnMeta.contract_id)
                   .filter(or_(Contract.start_date > end_date, Contract.end_date < start_date))
