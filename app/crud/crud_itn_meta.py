@@ -47,6 +47,7 @@ class CRUDItnMeta(CRUDBase[ItnMeta, ItnMetaCreate, ItnMetaUpdate]):
                   .join(Contract, Contract.id == ItnMeta.contract_id)
                   .filter(or_(Contract.start_date > end_date, Contract.end_date < start_date))
                   .all())
+        print(db_obj)
         return db_obj
 
     def is_match(
