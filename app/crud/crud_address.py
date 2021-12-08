@@ -8,7 +8,7 @@ from app.models.address import Address
 from app.schemas.address import AddressCreate, AddressUpdate
 
 
-class CRUDAddress(CRUDBase[Address, AddressCreate, AddressUpdate]):
+class CRUDAddress(CRUDBase[Address, AddressCreate, AddressUpdate, ]):
 
     def create(
         self, db: Session, *, obj_in: AddressCreate
@@ -19,6 +19,21 @@ class CRUDAddress(CRUDBase[Address, AddressCreate, AddressUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def filter_by_all(
+        self, db: Session, *, city: str, postal_code: str, address_line: str
+    ) -> Address:
+        db_obj = (
+            db.query(Address)
+            .filter(Address.city == city, Address.postal_code == postal_code, Address.address_line == address_line)
+            .first())
+
+        return db_obj
+
+    def is_match(
+        self, db: Session, *, obj_in: AddressCreate, address_id: int
+    ) -> bool:
+        return (obj_in.id == address_id)
 
 
 address = CRUDAddress(Address)

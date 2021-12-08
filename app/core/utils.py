@@ -16,6 +16,8 @@ def convert_date_to_utc(time_zone, dt_str, t_format="%Y-%m-%d"):
 
 
 def convert_date_to_utc_with_hours(time_zone, dt_str, t_format="%Y-%m-%d %H:%M:%S"):
+    print('entering convert_date_to_utc_with_hours')
+    print(time_zone, dt_str)
     if(dt_str == ''):
         return None
     if isinstance(dt_str, dt.date):
@@ -24,3 +26,46 @@ def convert_date_to_utc_with_hours(time_zone, dt_str, t_format="%Y-%m-%d %H:%M:%
     local = pytz.timezone(time_zone)
     local_date = local.localize(naive, is_dst=True)
     return local_date.astimezone(pytz.utc).replace(tzinfo=None)
+
+
+def convert_date_from_utc(time_zone, dt_obj, is_string=True, t_format="%Y-%m-%d %H:%M:%S", str_format="%Y-%m-%d"):
+    # print(f'from convert_date_from_utc --- > {dt_obj}')
+    if(dt_obj is None):
+        return None
+    if isinstance(dt_obj, str):
+        dt_obj = dt.datetime.strptime(dt_obj, t_format)
+    utc = pytz.timezone('UTC')
+    new_zone = pytz.timezone(time_zone)
+    dt_obj = utc.localize(dt_obj)
+    dt_obj = dt_obj.astimezone(new_zone).replace(tzinfo=None)
+    if is_string:
+        dt_obj = dt_obj.strftime(str_format)
+    return dt_obj
+
+
+def create_schedule_dates_from_local(local_start_date, local_end_date, time_zone='Europe/Sofia',  date_format='%Y-%m-%d'):
+
+    try:
+        if isinstance(local_start_date, str):
+
+            local_start_date = dt.datetime.strptime(
+                local_start_date, date_format)
+        elif isinstance(local_start_date, dt.date):
+            local_start_date = dt.datetime.combine(
+                local_start_date, dt.time.min)
+        if isinstance(local_end_date, str):
+
+            local_end_date = dt.datetime.strptime(local_end_date, date_format)
+        elif isinstance(local_end_date, dt.date):
+            local_end_date = dt.datetime.combine(local_end_date, dt.time.min)
+
+        local_end_date = local_end_date.replace(hour=23)
+
+        start_date_utc = convert_date_to_utc_with_hours(
+            time_zone, local_start_date)
+        end_date_utc = convert_date_to_utc_with_hours(
+            time_zone, local_end_date)
+        return (start_date_utc, end_date_utc)
+    except Exception as e:
+        print("🚀 ~ file: utils.py ~ line 59 ~ e", e)
+    return (None, None)

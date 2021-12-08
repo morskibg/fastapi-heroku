@@ -16,6 +16,7 @@ class CRUDContract(CRUDBase[Contract, ContractCreate, ContractUpdate]):
     ) -> Contract:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
+        print(f'in create conteract crud --> {db_obj}')
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

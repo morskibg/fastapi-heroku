@@ -39,9 +39,11 @@ class ItnScheduleInDBBase(ItnScheduleBase):
 
 # Properties to return to client
 class ItnSchedule(ItnScheduleInDBBase):
-    meta: ItnMeta
+    pass
+    # meta: ItnMeta
+
+    # Properties properties stored in DB
 
 
-# Properties properties stored in DB
 class ItnScheduleInDB(ItnScheduleInDBBase):
     pass

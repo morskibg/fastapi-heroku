@@ -1,17 +1,16 @@
+from .address import Address
 from typing import Optional
 from datetime import datetime
 
 from pydantic import BaseModel
 from sqlalchemy.sql.sqltypes import DateTime, Numeric
 
-from .contract import Contract
-from .address import Address
-
 
 # Shared properties
 class ItnMetaBase(BaseModel):
     id: str
     erp: str
+    load_type: str
 
     class Config:
         orm_mode = True
@@ -22,7 +21,6 @@ class ItnMetaBase(BaseModel):
 
 class ItnMetaCreate(ItnMetaBase):
 
-    contract_id: int
     address_id: int
 
     class Config:
@@ -42,7 +40,7 @@ class ItnMetaInDBBase(ItnMetaBase):
 
 # Properties to return to client
 class ItnMeta(ItnMetaInDBBase):
-    contract: Contract
+
     address: Address
 
 

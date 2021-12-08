@@ -16,12 +16,15 @@ ALGORITHM = "HS256"
 def create_access_token(
     subject: Union[str, Any], is_admin: bool = False, is_guest: bool = True, expires_delta: timedelta = None
 ) -> str:
+
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
+    print('expireee')
+    print(expire)
     to_encode = {"exp": expire, "sub": str(
         subject), "is_admin": is_admin, "is_guest": is_guest}
     encoded_jwt = jwt.encode(

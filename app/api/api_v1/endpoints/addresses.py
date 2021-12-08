@@ -20,7 +20,7 @@ def read_addresses(
     Retrieve addresses.
     """
     addresses = crud.address.get_multi(db, skip=skip, limit=limit)
-
+    print('aaaaaaaaadddr')
     return addresses
 
 

@@ -15,7 +15,7 @@ class Contractor(Base):
     name = Column(String, index=True)
     address_id = Column(Integer, ForeignKey("address.id",
                                             ondelete='CASCADE', onupdate='CASCADE'))
-    eik = Column(String, index=True)
+    eik = Column(String, index=True, unique=True)
 
     contracts = relationship(
         "Contract", back_populates="contractor", lazy="subquery")

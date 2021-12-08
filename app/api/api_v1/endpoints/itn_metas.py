@@ -1,4 +1,5 @@
 from typing import Any, List
+import datetime as dt
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -13,15 +14,42 @@ router = APIRouter()
 def read_itn_metas(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 100000,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Retrieve itn_metas.
-    """
+    Retrieve itn_metas.   """
+
     itn_metas = crud.itn_meta.get_multi(db, skip=skip, limit=limit)
 
     return itn_metas
+
+
+# @router.get("/{start_date}/{end_date}", response_model=List[schemas.ItnMeta])
+# def read_available_itn_metas_by_period(
+
+#     start_date: str,
+#     end_date: str,
+#     current_user: models.User = Depends(deps.get_current_active_user),
+#     db: Session = Depends(deps.get_db),
+# ) -> Any:
+#     """
+#     Retrieve availabe (free) metas by time period.
+#     """
+#     try:
+#         start_date_obj = dt.datetime.strptime(start_date, '%d/%m/%Y')
+#         end_date_obj = dt.datetime.strptime(end_date, '%d/%m/%Y')
+#         print("🚀 ~ file: itn_metas.py ~ line 61 ~ end_date_obj", end_date_obj)
+#     except:
+#         raise HTTPException(
+#             status_code=404,
+#             detail="The dates must be in format dd/mm/yyyy .",
+#         )
+
+#     metas = crud.itn_meta.get_all_availabe_for_period(
+#         db, start_date=start_date, end_date=end_date)
+
+#     return metas
 
 
 @router.get("/{itn_id}", response_model=schemas.ItnMeta)
@@ -33,7 +61,7 @@ def read_itn_meta_by_id(
     """
     Retrieve metas by id.
     """
-    itn_meta = crud.itn_meta.get(db, id=itn_id)
+    itn_meta = crud.itn_meta.get_by_id(db, id=itn_id)
     if not itn_meta:
         raise HTTPException(
             status_code=404,

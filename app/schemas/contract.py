@@ -8,15 +8,30 @@ from .contractor import Contractor
 
 # Shared properties
 class ContractBase(BaseModel):
-    price: float
+
     start_date: date
     end_date: date
 
 # Properties to receive on Contract creation
 
 
+# class ContractCreate(ContractBase):
+#     contractor_id: int
+
 class ContractCreate(ContractBase):
-    contractor_id: int
+    contractor_name: str
+    contractor_eik: str
+    contractor_city: str
+    contractor_postal_code: str
+    contractor_address_line: str
+
+    itn: str
+    erp: str
+    load_type: str
+    itn_city: str
+    itn_postal_code: str
+    itn_address_line: str
+    price: float
 
 
 # Properties to receive on Contract update

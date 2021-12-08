@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     # SECRET_KEY: str = secrets.token_urlsafe(32)
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    # ACCESS_TOKEN_EXPIRE_MINUTES: int = 1
     SERVER_NAME: str = 'https://softuni-react-backend.herokuapp.com/'
     # https://backend-react-powerapp.herokuapp.com/
     SERVER_HOST: AnyHttpUrl = 'http://localhost:8080'
@@ -85,6 +86,8 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str = '12345'
     USERS_OPEN_REGISTRATION: bool = True
     EMAIL_GUEST_USER: EmailStr = "guestUser@demo.com"
+    STP_CODES: list = ['EPRO_B01', 'EPRO_B02', 'EPRO_B03', 'EPRO_B04',           'EPRO_H01', 'EPRO_H02', 'EPRO_S01', 'EVN_BD000', 'EVN_G0', 'EVN_G1',
+                       'EVN_G2', 'EVN_G3', 'EVN_G4', 'EVN_H0', 'EVN_H1', 'EVN_H2', 'CEZ_B1', 'CEZ_B2', 'CEZ_B3', 'CEZ_B4', 'CEZ_B5', 'CEZ_H1', 'CEZ_H2', 'CEZ_S1']
 
     class Config:
         case_sensitive = True
