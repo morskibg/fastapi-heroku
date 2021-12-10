@@ -1,9 +1,12 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 
 from pydantic import BaseModel
 from sqlalchemy.sql.sqltypes import DateTime, Numeric
+
+# from app.models.sub_contract import SubContract
 from .contractor import Contractor
+from .sub_contract import SubContract
 
 
 # Shared properties
@@ -11,6 +14,7 @@ class ContractBase(BaseModel):
 
     start_date: date
     end_date: date
+
 
 # Properties to receive on Contract creation
 
@@ -51,6 +55,7 @@ class ContractInDBBase(ContractBase):
 # Properties to return to client
 class Contract(ContractInDBBase):
     contractor: Contractor  # Optional[Contractor] = None
+    sub_contracts:  Optional[List[SubContract]] = []
 
 
 # Properties properties stored in DB

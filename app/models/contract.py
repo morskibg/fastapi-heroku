@@ -8,6 +8,7 @@ from app.db.base_class import Base
 
 if TYPE_CHECKING:
     from .contractor import Contractor  # noqa: F401
+    from .sub_contract import SubContract  # noqa: F401
 
 
 class Contract(Base):
@@ -20,3 +21,8 @@ class Contract(Base):
 
     contractor = relationship(
         "Contractor", back_populates="contracts", lazy='subquery')
+
+    # sub_contracts = relationship("SubContract", backref="contract")
+
+    sub_contracts = relationship(
+        "SubContract", back_populates="contract", cascade="all, delete", passive_deletes=True, lazy='subquery')

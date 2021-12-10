@@ -52,7 +52,21 @@ class ItnSchedule(Base):
         schedule_df.to_sql(str(table_name),
                            con=connection, if_exists='append', index=False)
 
-    # @classmethod
-    # def autoinsert_new(cls, mapper, connection, target):
-    #     db = SessionLocal()
-    #     print(f'in update from meta')
+    @classmethod
+    def on_delete_contract(cls, mapper, connection, target):
+        db = SessionLocal()
+        print(f'in on_delete_sub_contract')
+        sub = target
+        table_name = ItnSchedule.__table__
+        start_date, end_date = db.query(
+            Contract.start_date, Contract.end_date).filter(Contract.id == sub.contract_id).first()
+        end_date = end_date.replace(hour=23, minute=0, second=0, microsecond=0)
+
+        start_date_utc = convert_date_to_utc_with_hours(
+            'Europe/Sofia', start_date)
+        end_date_utc = convert_date_to_utc_with_hours(
+            'Europe/Sofia', end_date)
+
+        delete_query = table_name.delete().where((ItnSchedule.itn == sub.itn) & (
+            ItnSchedule.utc >= start_date_utc) & (ItnSchedule.utc <= end_date_utc))
+        connection.execute(delete_query)

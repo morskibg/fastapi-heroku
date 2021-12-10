@@ -3,7 +3,9 @@ from datetime import date
 
 from pydantic import BaseModel
 from sqlalchemy.sql.sqltypes import DateTime, Numeric
-from .contract import Contract
+
+# from app.models.contract import Contract
+# from .contract import Contract
 
 
 # Shared properties
@@ -50,9 +52,12 @@ class SubContractInDBBase(SubContractBase):
 
 # Properties to return to client
 class SubContract(SubContractInDBBase):
-    contract: Contract  # Optional[Contractor] = None
+    pass
+    # contract: Optional[Contract] = None
+    # contract: Contract  # Optional[Contractor] = None
+
+    # Properties properties stored in DB
 
 
-# Properties properties stored in DB
 class SubContractInDB(SubContractInDBBase):
     pass

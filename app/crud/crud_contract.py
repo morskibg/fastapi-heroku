@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.contract import Contract
+from app.models.sub_contract import SubContract
 
 from app.schemas.contract import ContractCreate, ContractUpdate
 
@@ -21,6 +22,9 @@ class CRUDContract(CRUDBase[Contract, ContractCreate, ContractUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    # def get_full_data(self, db: Session, *, obj_in: ContractCreate
+    #                   ) -> Contract:
 
 
 contract = CRUDContract(Contract)
