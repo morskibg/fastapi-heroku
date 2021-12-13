@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:4200", "http://localhost:3000",
-                                              "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com", "http://10.10.10.71:3000", "https://softuni-react-powerapp.herokuapp.com", "https://softuni-react-backend.herokuapp.com"]
+                                              "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com", "http://10.10.10.71:3000", "https://softuni-react-powerapp.herokuapp.com", "https://softuni-react-backend.herokuapp.com", "https://softuni-react-powerapp.vercel.app/"]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
@@ -80,7 +80,7 @@ class Settings(BaseSettings):
     #         and values.get("SMTP_PORT")
     #         and values.get("EMAILS_FROM_EMAIL")
     #     )
-
+    EQ_API_KEY: str = 'ab5e81-7adacb-92a6ae-2185c9'
     EMAIL_TEST_USER: EmailStr = "dimityrp@yahoo.com"  # type: ignore
     FIRST_SUPERUSER: EmailStr = "dimityrp@yahoo.com"
     FIRST_SUPERUSER_PASSWORD: str = '12345'

@@ -1,7 +1,11 @@
 import sys
 import pytz
 import datetime as dt
+from datetime import date, timedelta
+
 import pandas as pd
+from energyquantified import EnergyQuantified
+from app.core.config import settings
 
 
 def convert_date_to_utc(time_zone, dt_str, t_format="%Y-%m-%d"):
@@ -69,3 +73,70 @@ def create_schedule_dates_from_local(local_start_date, local_end_date, time_zone
     except Exception as e:
         print("🚀 ~ file: utils.py ~ line 59 ~ e", e)
     return (None, None)
+
+
+class Montel_Reader(object):
+
+    def __init__(self):
+        self.eq = self._create_eq()
+
+    def _create_eq(self):
+        api_key = settings.EQ_API_KEY
+        eq = EnergyQuantified(api_key=api_key)
+        return eq
+
+    def get_data_df(self, q, begin_dt, end_dt):
+        curves = self.eq.metadata.curves(q=q)
+        curve = curves[0]
+        timeseries = self.eq.timeseries.load(
+            curve,
+            begin=begin_dt,
+            end=end_dt
+        )
+        return timeseries.to_dataframe()
+
+
+class Spot(object):
+
+    MARKETS = ['BG Price Spot EUR/MWh IBEX H Actual', 'GR Price Spot EUR/MWh ENEX H Actual', 'RO Price Spot EUR/MWh OPCOM H Actual',
+               'HU Price Spot EUR/MWh HUPX H Actual', 'DE Price Spot EUR/MWh EPEX H Actual']
+
+    def __init__(self, montel_reader):
+        self.montel_reader = montel_reader
+
+    def get_data(self):
+
+        cet_date = convert_date_from_utc(
+            'Europe/Prague', dt.datetime.utcnow() - timedelta(days=2), False)
+
+        final_df = pd.DataFrame()
+        cols = []
+        for spot_name in self.MARKETS:
+            df = self.montel_reader.get_data_df(
+                q=spot_name, begin_dt=cet_date.date(), end_dt=date.today() + timedelta(days=2))
+
+            if final_df.empty:
+                final_df = df
+            else:
+                final_df = pd.concat([final_df, df], axis=1)
+            cols.append(spot_name.split(' ')[0] + '_Pr')
+
+        if not final_df.empty:
+            final_df.index = final_df.index.tz_convert('UTC').tz_localize(None)
+            final_df.columns = cols
+            final_df = final_df.reset_index()
+            final_df.rename(columns={'date': 'utc'}, inplace=True)
+            final_df['H24'] = final_df['utc'].apply(
+                lambda x:  convert_date_from_utc('CET', x, False).hour + 1)
+            cols = ['utc', 'H24'] + cols
+            final_df = final_df[cols]
+
+        # print(final_df)
+        return final_df
+
+
+# reader = Montel_Reader()
+# sql_client = Ged_sql_client_m()
+# scraper = Dam_4m(reader, sql_client)
+# data = scraper.get_data()
+# scraper.update_db(data)

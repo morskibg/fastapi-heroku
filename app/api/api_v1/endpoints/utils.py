@@ -3,6 +3,7 @@ import pandas as pd
 import datetime as dt
 import calendar
 import os
+import sys
 import json
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -12,7 +13,7 @@ from app import models, schemas
 from app.api import deps
 from app.core.celery_app import celery_app
 from app.core.config import settings
-from app.core.utils import convert_date_to_utc_with_hours, convert_date_from_utc
+from app.core.utils import convert_date_to_utc_with_hours, convert_date_from_utc, Montel_Reader, Spot
 from app.utils import send_test_email
 
 router = APIRouter()
@@ -143,3 +144,27 @@ def excel(
     # json_result = json.dumps(data_to_return)
     # print("🚀 ~ file: utils.py ~ line 132 ~ json_result", json_result)
     # return {code: data_to_return.to_json(orient='index')}
+
+
+@router.get('/spots')
+def spots(
+    # code: str,
+    start_date: str = '01/12/2021',
+    end_date: str = '31/12/2021',
+    # type: str = 'raw',
+    current_user: models.User = Depends(deps.get_current_active_superuser),
+) -> Any:
+    try:
+        reader = Montel_Reader()
+        #
+        scraper = Spot(reader)
+        data_df = scraper.get_data()
+        return {'data': data_df.to_json(orient='index')}
+        # scraper.update_db(data)
+
+    except Exception as e:
+        print("🚀 ~ file: utils.py ~ line 165 ~ e", e)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(exc_type, exc_obj, exc_tb.tb_lineno)
+        raise HTTPException(
+            status_code=500, detail="Server error !Spots not loaded !")
