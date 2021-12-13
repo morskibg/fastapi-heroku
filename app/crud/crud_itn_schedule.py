@@ -1,3 +1,4 @@
+import sys
 from typing import List
 from datetime import datetime
 
@@ -48,6 +49,20 @@ class CRUDContract(CRUDBase[ItnSchedule, ItnScheduleCreate, ItnScheduleUpdate]):
                   .all())
         # print(f'SSSSSSSSSSSSss ---> {db_obj[0].itn}')
         return db_obj
+
+    def delete_by_itn_for_period_utc(
+        self, db: Session, *, itn: str, start_date_utc: datetime, end_date_utc: datetime
+    ) -> bool:
+        db_obj = (db.query(ItnSchedule)
+                  .filter(ItnSchedule.itn == itn, ItnSchedule.utc >= start_date_utc, ItnSchedule.utc <= end_date_utc)
+                  .delete(synchronize_session='fetch'))
+        try:
+            db.commit()
+            return True
+        except:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(exc_type, exc_obj, exc_tb.tb_lineno)
+            return False
 
 
 itn_schedule = CRUDContract(ItnSchedule)

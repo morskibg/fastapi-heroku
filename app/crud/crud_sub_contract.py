@@ -22,5 +22,13 @@ class CRUDSubContract(CRUDBase[SubContract, SubContractCreate, SubContractUpdate
         db.refresh(db_obj)
         return db_obj
 
+    def get_by_contract_id(
+        self, db: Session, *, contract_id: int
+    ) -> SubContract:
+        db_obj = (db.query(SubContract)
+                  .filter(SubContract.contract_id == contract_id)
+                  .first())
+        return db_obj
+
 
 sub_contract = CRUDSubContract(SubContract)

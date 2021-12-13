@@ -1,5 +1,7 @@
 from typing import Any, List
 import sys
+import pandas as pd
+from fastapi.encoders import jsonable_encoder
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -7,6 +9,10 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.utils import create_schedule_dates_from_local
+from app.models import sub_contract
+from app.models import itn_schedule
+from app.models.itn_schedule import ItnSchedule
+from app.schemas.sub_contract import SubContract
 router = APIRouter()
 
 
@@ -96,8 +102,8 @@ def create_contract(
             if not crud.address.is_match(db, obj_in=address, address_id=contractor.address_id):
                 update_contractor_dict['address_id'] = address.id
             elif not crud.contractor.is_match(db, obj_in=contractor, name=contract_in.contractor_name, eik=contract_in.contractor_eik):
-                update_contractor_dict['name':contractor.name,
-                                       'eik':contractor.eik]
+                update_contractor_dict['name'] = contractor.name,
+                update_contractor_dict['eik'] = contractor.eik,
             if bool(update_contractor_dict):
                 crud.contractor.update(
                     db, db_obj=contractor, obj_in=update_contractor_dict)
@@ -178,12 +184,136 @@ def update_contract(
     """
     Update an contract.
     """
+    print('ffffffffff')
     contract = crud.contract.get(db=db, id=contract_id)
     if not contract:
         raise HTTPException(status_code=404, detail="Contract not found")
 
-    contract = crud.contract.update(
-        db=db, db_obj=contract, obj_in=contract_in)
+    print('from update contract\n', contract_in)
+    try:
+        schedule_start_date_utc, schedule_end_date_utc = create_schedule_dates_from_local(
+            contract_in.start_date, contract_in.end_date)
+
+        if not schedule_start_date_utc and not schedule_end_date_utc:
+            raise HTTPException(
+                status_code=404,
+                detail="The dates are in incorrect format !",
+            )
+
+      # ADDRESS
+        address = crud.address.filter_by_all(db,
+                                             city=contract_in.contractor_city,
+                                             postal_code=contract_in.contractor_postal_code,
+                                             address_line=contract_in.contractor_address_line)
+        if not address:
+            print('in create new address')
+            address = crud.address.create(db, obj_in={'city': contract_in.contractor_city,
+                                                      'postal_code': contract_in.contractor_postal_code,
+                                                      'address_line': contract_in.contractor_address_line})
+        print("🚀 ~ file: contracts.py ~ line 203 ~ address", address)
+        # CONTRACTOR
+        contractor = crud.contractor.filter_by_eik(
+            db, eik=contract_in.contractor_eik)
+
+        if not contractor:
+            print('in create new contractor')
+            contractor = crud.contractor.create(
+                db,
+                obj_in={
+                    'name': contract_in.contractor_name,
+                    'eik': contract_in.contractor_eik,
+                    'address_id': address.id,
+                })
+        else:
+            update_contractor_dict = {}
+            if not crud.address.is_match(db, obj_in=address, address_id=contractor.address_id):
+                update_contractor_dict['address_id'] = address.id
+            elif not crud.contractor.is_match(db, obj_in=contractor, name=contract_in.contractor_name, eik=contract_in.contractor_eik):
+                update_contractor_dict['name'] = contract_in.contractor_name,
+                update_contractor_dict['eik'] = contract_in.contractor_eik,
+
+            if bool(update_contractor_dict):
+                # crud.contractor.update(
+                #     db, db_obj=contractor, obj_in=update_contractor_dict)
+                for field, value in update_contractor_dict.items():
+                    setattr(contractor, field, value)
+
+                if contractor not in db:
+                    db.add(contractor)
+                db.commit()
+                print(f'in update contractor --> {update_contractor_dict}')
+
+        if (contract.start_date != contract_in.start_date
+            or contract.end_date != contract_in.end_date
+                or contract.contractor_id != contractor.id):
+            contract_update_dict = {
+                'start_date': contract_in.start_date,
+                'end_date': contract_in.end_date,
+                'contractor_id': contractor.id}
+            for field, value in contract_update_dict.items():
+                setattr(contract, field, value)
+
+            if contract not in db:
+                db.add(contract)
+            db.commit()
+        # SUBCONTRACT PRICE
+        subcontract = crud.sub_contract.get_by_contract_id(
+            db, contract_id=contract.id)
+
+        update_sub_dict = {}
+        if (subcontract.start_date.date() != contract_in.start_date
+                or subcontract.end_date.date() != contract_in.end_date):
+
+            old_start_date_utc, old_end_date_utc = create_schedule_dates_from_local(
+                subcontract.start_date, subcontract.end_date)
+
+            print('in delete itn schedule', subcontract.start_date.date(),
+                  contract_in.start_date)
+            is_deleted = crud.itn_schedule.delete_by_itn_for_period_utc(
+                db, itn=subcontract.itn, start_date_utc=old_start_date_utc, end_date_utc=old_end_date_utc)
+            print('in delete itn schedule', old_start_date_utc,
+                  old_end_date_utc)
+
+            table_name = ItnSchedule.__table__
+
+            time_series = pd.date_range(
+                start=schedule_start_date_utc, end=schedule_end_date_utc, freq='h')
+            schedule_df = pd.DataFrame(time_series, columns=['utc'])
+
+            schedule_df['itn'] = subcontract.itn
+            schedule_df['consumption_vol'] = -1
+            schedule_df['forecast_vol'] = -1
+            schedule_df.to_sql(str(table_name),
+                               con=db.bind, if_exists='append', index=False)
+
+            update_sub_dict['start_date'] = contract_in.start_date
+            update_sub_dict['end_date'] = contract_in.end_date
+
+        elif subcontract.price != contract_in.price:
+
+            update_sub_dict['price'] = contract_in.price
+
+        # print("🚀 ~ file: contracts.py ~ line 271 ~ upd_dict", upd_dict)
+        # print("🚀 ~ file: contracts.py ~ line 271 ~ upd_dict", subcontract)
+        # obj_data = jsonable_encoder(subcontract)
+        if bool(update_sub_dict):
+            for field, value in update_sub_dict.items():
+                setattr(subcontract, field, value)
+
+            if subcontract not in db:
+                db.add(subcontract)
+            db.commit()
+            # crud.sub_contract.update(
+            #     db, db_obj=subcontract, obj_in=update_sub_dict)
+
+    except Exception as e:
+        print("🚀 ~ file: contracts.py ~ line 209 ~ e", e)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print(exc_type, exc_obj, exc_tb.tb_lineno)
+        raise HTTPException(
+            status_code=500, detail="Server error ! Contract not created !")
+    # contract = crud.contract.update(
+    #     db=db, db_obj=contract, obj_in=contract_in)
     return contract
 
 

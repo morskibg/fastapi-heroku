@@ -40,16 +40,25 @@ class ContractCreate(ContractBase):
 
 # Properties to receive on Contract update
 class ContractUpdate(ContractBase):
-    pass
+    id: int
+    contractor_name: str
+    contractor_eik: str
+    contractor_city: str
+    contractor_postal_code: str
+    contractor_address_line: str
+    price: float
+    # contractor: Contractor  # Optional[Contractor] = None
+    # sub_contracts:  Optional[List[SubContract]] = []
 
 
 # Properties shared by models stored in DB
 class ContractInDBBase(ContractBase):
+    # pass
+    # arbitrary_types_allowed = True
     id: int
 
     class Config:
         orm_mode = True
-        # arbitrary_types_allowed = True
 
 
 # Properties to return to client
@@ -59,5 +68,7 @@ class Contract(ContractInDBBase):
 
 
 # Properties properties stored in DB
+
+
 class ContractInDB(ContractInDBBase):
     pass
