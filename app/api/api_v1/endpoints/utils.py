@@ -152,14 +152,17 @@ def spots(
     start_date: str = '01/12/2021',
     end_date: str = '31/12/2021',
     # type: str = 'raw',
-    current_user: models.User = Depends(deps.get_current_active_superuser),
+    # current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     try:
         reader = Montel_Reader()
         #
-        scraper = Spot(reader)
+        scraper = Spot(reader, start_date, end_date)
         data_df = scraper.get_data()
-        return {'data': data_df.to_json(orient='index')}
+        data_df['eet'] = data_df['utc'].apply(
+            lambda x: str(convert_date_from_utc('EET', x, False)))
+        print("🚀 ~ file: utils.py ~ line 162 ~ data_df", data_df)
+        return [{'data': data_df.to_json(orient='index')}]
         # scraper.update_db(data)
 
     except Exception as e:

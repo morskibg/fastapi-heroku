@@ -101,19 +101,25 @@ class Spot(object):
     MARKETS = ['BG Price Spot EUR/MWh IBEX H Actual', 'GR Price Spot EUR/MWh ENEX H Actual', 'RO Price Spot EUR/MWh OPCOM H Actual',
                'HU Price Spot EUR/MWh HUPX H Actual', 'DE Price Spot EUR/MWh EPEX H Actual']
 
-    def __init__(self, montel_reader):
+    def __init__(self, montel_reader, start_date, end_date):
         self.montel_reader = montel_reader
+        self.start_date = convert_date_to_utc('Europe/Sofia', start_date)
+        self.end_date = convert_date_to_utc('Europe/Sofia', end_date)
 
     def get_data(self):
 
-        cet_date = convert_date_from_utc(
-            'Europe/Prague', dt.datetime.utcnow() - timedelta(days=2), False)
+        cet_start_date = convert_date_from_utc(
+            'Europe/Prague', self.start_date, False)
+        cet_end_date = convert_date_from_utc(
+            'Europe/Prague', self.end_date, False)
+        # cet_date = convert_date_from_utc(
+        #     'Europe/Prague', dt.datetime.utcnow() - timedelta(days=2), False)
 
         final_df = pd.DataFrame()
         cols = []
         for spot_name in self.MARKETS:
             df = self.montel_reader.get_data_df(
-                q=spot_name, begin_dt=cet_date.date(), end_dt=date.today() + timedelta(days=2))
+                q=spot_name, begin_dt=cet_start_date, end_dt=cet_end_date)
 
             if final_df.empty:
                 final_df = df
