@@ -43,7 +43,8 @@ class Settings(BaseSettings):
 
     EMAILS_ENABLED: bool = False
 
-    EQ_API_KEY: str
+    EQ_API_KEY: Optional(str)
+
     EMAIL_TEST_USER: EmailStr = "dimityrp@yahoo.com"  # type: ignore
     FIRST_SUPERUSER: EmailStr = "dimityrp@yahoo.com"
     FIRST_SUPERUSER_PASSWORD: str = "12345"
