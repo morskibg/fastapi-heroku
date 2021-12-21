@@ -183,6 +183,7 @@ def spots(
     # current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
     try:
+        print(f"from eeeeenv ---> {settings.EQ_API_KEY}")
         reader = Montel_Reader()
         #
         scraper = Spot(reader, start_date, end_date)
