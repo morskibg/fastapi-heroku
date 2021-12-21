@@ -14,4 +14,4 @@ pyjwt
 pandas
 openpyxl
 energyquantified
-dotenv
+python-dotenv
